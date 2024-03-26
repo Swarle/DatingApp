@@ -11,4 +11,8 @@
     <ProjectReference Include="..\DatingApp.DAL\DatingApp.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
 </Project>
