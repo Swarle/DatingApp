@@ -1,4 +1,6 @@
 
+using API.Extensions;
+using API.Infrastructure.Middlewares;
 using DatingApp.BL.Extensions;
 
 namespace API
@@ -15,6 +17,7 @@ namespace API
             builder.Services.AddCors();
 
             builder.Services.AddBusinessLogicLayer(builder.Configuration);
+            builder.Services.AddIdentityServices(builder.Configuration);
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,6 +29,8 @@ namespace API
                     .AllowAnyMethod()
                     .WithOrigins("http://localhost:4200")
             );
+
+            app.UseApiExceptionMiddleware();
 
             if (app.Environment.IsDevelopment())
             {

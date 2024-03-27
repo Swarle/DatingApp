@@ -9,10 +9,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatingApp.DAL\DatingApp.DAL.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>
