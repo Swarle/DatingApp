@@ -51,6 +51,31 @@ namespace DatingApp.BL.Services
             };
         }
 
+        public async Task<UserDto> LoginAsync(LoginDto loginDto)
+        {
+            var userSpecification = new FindUserByUsernameSpecification(loginDto.Username);
+
+            var user = await _repository.FindSingle(userSpecification);
+
+            if (user == null) throw new ApiException(HttpStatusCode.Unauthorized, "Invalid username");
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i])
+                    throw new ApiException(HttpStatusCode.Unauthorized, "Invalid password");
+            }
+
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user),
+            };
+        }
+
         private async Task<bool> IsUserExist(string username)
         {
             var userSpecification = new FindUserByUsernameSpecification(username);

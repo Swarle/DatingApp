@@ -23,6 +23,12 @@ namespace API.Controllers
             return userDto;
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<UserDto>> LoginAsync(LoginDto loginDto)
+        {
+            var userDto = await _accountService.LoginAsync(loginDto);
 
+            return userDto;
+        }
     }
 }
