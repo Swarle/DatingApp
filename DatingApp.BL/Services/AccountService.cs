@@ -30,7 +30,7 @@ namespace DatingApp.BL.Services
         public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
         {
             if (await IsUserExist(registerDto.Username))
-                throw new ApiException(HttpStatusCode.BadRequest, "Username is taken");
+                throw new HttpException(HttpStatusCode.BadRequest, "Username is taken");
 
             using var hmac = new HMACSHA512();
 
@@ -57,7 +57,7 @@ namespace DatingApp.BL.Services
 
             var user = await _repository.FindSingle(userSpecification);
 
-            if (user == null) throw new ApiException(HttpStatusCode.Unauthorized, "Invalid username");
+            if (user == null) throw new HttpException(HttpStatusCode.Unauthorized, "Invalid username");
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
 
@@ -66,7 +66,7 @@ namespace DatingApp.BL.Services
             for (int i = 0; i < computedHash.Length; i++)
             {
                 if (computedHash[i] != user.PasswordHash[i])
-                    throw new ApiException(HttpStatusCode.Unauthorized, "Invalid password");
+                    throw new HttpException(HttpStatusCode.Unauthorized, "Invalid password");
             }
 
             return new UserDto

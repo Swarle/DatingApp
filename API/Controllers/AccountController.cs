@@ -18,6 +18,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> RegisterAsync(RegisterDto registerDto)
         {
+            throw new Exception("oops");
             var userDto = await _accountService.RegisterAsync(registerDto);
 
             return userDto;
