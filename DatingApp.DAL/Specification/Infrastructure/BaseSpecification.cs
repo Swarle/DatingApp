@@ -47,7 +47,7 @@ namespace DatingApp.DAL.Specification.Infrastructure
 
         public virtual bool IsSatisfied(TEntity obj)
         {
-            bool result = Expression.Compile().Invoke(obj);
+            bool result = Expression!.Compile().Invoke(obj);
 
             return result;
         }

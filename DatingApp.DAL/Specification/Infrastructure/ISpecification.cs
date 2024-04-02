@@ -9,10 +9,10 @@ namespace DatingApp.DAL.Specification.Infrastructure
 {
     public interface ISpecification<TEntity> where TEntity : class
     {
-        public Expression<Func<TEntity, bool>> Expression { get; }
+        public Expression<Func<TEntity, bool>>? Expression { get; }
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; set; }
         public List<string> IncludeString { get; set; }
-        public PagingSpecification Paging { get; set; }
+        public PagingSpecification? Paging { get; set; }
         public bool AsNoTracking { get; set; }
 
         bool IsSatisfied(TEntity obj);
