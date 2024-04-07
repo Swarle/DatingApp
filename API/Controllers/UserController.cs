@@ -1,34 +1,43 @@
-﻿using System.Net;
-using DatingApp.BL.Infrastructure;
-using DatingApp.DAL.Context;
-using DatingApp.DAL.Entities;
+﻿using DatingApp.BL.DTO;
+using DatingApp.BL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+    [Authorize]
+    public class UserController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IUserService _service;
 
-        public UserController(DataContext context)
+        public UserController(IUserService service)
         {
-            _context = context;
+            _service = service;
         }
-
+        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
-        }
+            var users = await _service.GetAllUsersAsync();
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser?>> GetUser(int id)
+            return Ok(users);
+        }
+        
+        [HttpGet("{username}")]
+        public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            return await _context.Users.FindAsync(id);
+            var user = await _service.GetUserByUsernameAsync(username);
+
+            return Ok(user);
+        }
+        
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserAsync(MemberUpdateDto memberDto)
+        {
+            await _service.UpdateUserAsync(memberDto);
+
+            return NoContent();
         }
     }
 }

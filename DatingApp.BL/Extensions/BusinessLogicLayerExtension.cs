@@ -18,12 +18,13 @@ namespace DatingApp.BL.Extensions
             IConfiguration configuration)
         {
             services.AddDataAccessLayer(configuration);
+            
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
-
-            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-
+            services.AddScoped<IUserService, UserService>();
+                
             return services;
         }
     }
