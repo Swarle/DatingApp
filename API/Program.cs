@@ -1,6 +1,7 @@
 using API.Extensions;
 using API.Infrastructure.Middlewares;
 using DatingApp.BL.Extensions;
+using DatingApp.BL.Infrastructure;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -17,43 +18,13 @@ namespace API
             builder.Services.AddCors();
             
             builder.Services.AddHttpContextAccessor();
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection(""));
             
             builder.Services.AddBusinessLogicLayer(builder.Configuration);
             builder.Services.AddIdentityServices(builder.Configuration);
             
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(opt =>
-            {
-                opt.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "DatingApp",
-                    Version = "v1"
-                });
-                
-                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Please enter a valid token"
-                });
-                
-                opt.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                    {
-                        new OpenApiSecurityScheme {
-                            Reference = new OpenApiReference {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header
-                        },
-                        new string[] {}
-                    }
-                });
-            });
+            builder.Services.AddSwaggerWithSettings();
 
             var app = builder.Build();
 

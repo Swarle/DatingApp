@@ -1,4 +1,5 @@
 ﻿using DatingApp.BL.DTO;
+using DatingApp.BL.Extensions;
 using DatingApp.BL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,15 @@ namespace API.Controllers
             await _service.UpdateUserAsync(memberDto);
 
             return NoContent();
+        }
+
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<PhotoDto>> AddPhotoAsync(IFormFile file)
+        {
+            var photoDto = await _service.AddPhotoAsync(file);
+
+            return CreatedAtAction(nameof(GetUser), 
+                new { username = User.GetUsername() }, photoDto);
         }
     }
 }
