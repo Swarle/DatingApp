@@ -49,5 +49,13 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetUser), 
                 new { username = User.GetUsername() }, photoDto);
         }
+
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhotoAsync(int photoId)
+        {
+            await _service.SetMainPhotoAsync(photoId);
+
+            return NoContent();
+        }
     }
 }

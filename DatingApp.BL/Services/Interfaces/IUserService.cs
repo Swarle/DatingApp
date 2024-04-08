@@ -9,5 +9,6 @@ public interface IUserService
     public Task<MemberDto> GetUserByUsernameAsync(string username);
     public Task UpdateUserAsync(MemberUpdateDto memberDto);
     public Task<PhotoDto> AddPhotoAsync(IFormFile file);
+    public Task SetMainPhotoAsync(int photoId);
 
 }

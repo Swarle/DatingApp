@@ -40,10 +40,7 @@ public class UserService : IUserService
 
     public async Task<MemberDto> GetUserByUsernameAsync(string username)
     {
-        var specification = new GetUserWithPhotosByUsernameSpecification(username);
-
-        var user = await _repository.FindSingle(specification) ?? 
-                   throw new HttpException(HttpStatusCode.BadRequest, $"No user with Username: \"{username}\"");
+        var user = await GetUserAsync(username);
 
         var userDto = _mapper.Map<MemberDto>(user);
 
@@ -52,14 +49,7 @@ public class UserService : IUserService
 
     public async Task UpdateUserAsync(MemberUpdateDto memberDto)
     {
-        var username = _httpContext.User.GetUsername() ??
-                       throw new InvalidOperationException("Username claim is empty");
-
-        var specification = new GetUserWithPhotosByUsernameSpecification(username);
-
-        var user = await _repository.FindSingle(specification);
-
-        if (user == null) throw new HttpException(HttpStatusCode.NotFound, $"No user with Username: \"{username}\"");
+        var user = await GetUserAsync();
 
         _mapper.Map(memberDto, user);
 
@@ -69,15 +59,7 @@ public class UserService : IUserService
 
     public async Task<PhotoDto> AddPhotoAsync(IFormFile file)
     {
-        var username = _httpContext.User.GetUsername() ??
-                       throw new InvalidOperationException("Username claim is empty");
-
-        var specification = new GetUserWithPhotosByUsernameSpecification(username);
-
-        var user = await _repository.FindSingle(specification);
-
-        if (user == null) 
-            throw new HttpException(HttpStatusCode.NotFound, $"No user with Username: \"{username}\"");
+        var user = await GetUserAsync();
 
         var uploadResult = await _photoService.AddPhotoAsync(file);
 
@@ -96,5 +78,41 @@ public class UserService : IUserService
         var photoDto = _mapper.Map<PhotoDto>(photo);
 
         return photoDto;
+    }
+
+    public async Task SetMainPhotoAsync(int photoId)
+    {
+        var user = await GetUserAsync();
+
+        var photo = user.Photos.FirstOrDefault(x => x.Id == photoId) ??
+                    throw new HttpException(HttpStatusCode.NotFound);
+
+        if (photo.IsMain) 
+            throw new HttpException(HttpStatusCode.BadRequest, "This is already your main photo");
+
+        var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+
+        if (currentMain != null)
+            currentMain.IsMain = false;
+
+        photo.IsMain = true;
+
+        await _repository.SaveChangesAsync();
+    }
+    
+
+    private async Task<AppUser> GetUserAsync(string? username = null)
+    {
+        username ??= _httpContext.User.GetUsername() ??
+                     throw new InvalidOperationException("Username claim is empty");
+        
+        var specification = new GetUserWithPhotosByUsernameSpecification(username);
+
+        var user = await _repository.FindSingle(specification);
+
+        if (user == null) 
+            throw new HttpException(HttpStatusCode.NotFound, $"No user with Username: \"{username}\"");
+
+        return user;
     }
 }

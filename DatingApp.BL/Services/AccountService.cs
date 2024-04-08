@@ -47,13 +47,13 @@ namespace DatingApp.BL.Services
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
             };
         }
 
         public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
-            var userSpecification = new FindUserByUsernameSpecification(loginDto.Username);
+            var userSpecification = new GetUserWithPhotosByUsernameSpecification(loginDto.Username);
 
             var user = await _repository.FindSingle(userSpecification);
 
@@ -73,6 +73,7 @@ namespace DatingApp.BL.Services
             {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
         }
 
