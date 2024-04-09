@@ -10,5 +10,6 @@ public interface IUserService
     public Task UpdateUserAsync(MemberUpdateDto memberDto);
     public Task<PhotoDto> AddPhotoAsync(IFormFile file);
     public Task SetMainPhotoAsync(int photoId);
+    public Task DeletePhotoAsync(int photoId);
 
 }

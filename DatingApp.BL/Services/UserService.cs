@@ -99,7 +99,30 @@ public class UserService : IUserService
 
         await _repository.SaveChangesAsync();
     }
-    
+
+    public async Task DeletePhotoAsync(int photoId)
+    {
+        var user = await GetUserAsync();
+
+        var photo = user.Photos.FirstOrDefault(x => x.Id == photoId) ??
+                    throw new HttpException(HttpStatusCode.NotFound);
+
+        if (photo.IsMain)
+            throw new HttpException(HttpStatusCode.BadRequest, "You cannot delete your main photo");
+
+        if (photo.PublicId != null)
+        {
+            var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+
+            if (result.Error != null)
+                throw new HttpException(HttpStatusCode.BadRequest, result.Error.Message);
+        }
+
+        user.Photos.Remove(photo);
+
+        await _repository.SaveChangesAsync();
+    }
+
 
     private async Task<AppUser> GetUserAsync(string? username = null)
     {

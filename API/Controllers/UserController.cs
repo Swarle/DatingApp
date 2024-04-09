@@ -57,5 +57,13 @@ namespace API.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("delete-photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            await _service.DeletePhotoAsync(photoId);
+
+            return Ok();
+        }
     }
 }
