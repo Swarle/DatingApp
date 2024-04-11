@@ -27,6 +27,9 @@ namespace DatingApp.BL.Infrastructure
                     opt.MapFrom(src => src.SecureUrl.AbsoluteUri))
                 .ForMember(dest => dest.PublicId, opt =>
                     opt.MapFrom(src => src.PublicId));
+            CreateMap<RegisterDto, AppUser>()
+                .ForMember(dest => dest.UserName, opt => 
+                    opt.MapFrom(src => src.Username.ToLower()));
 
         }
     }
