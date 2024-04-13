@@ -47,8 +47,10 @@ namespace API
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            if (app.Environment.IsDevelopment())
+                app.MapControllers().AllowAnonymous();
+            else
+                app.MapControllers();
 
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             await app.ApplySeedData(logger);

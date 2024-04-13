@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DatingApp.DAL.Context;
+﻿using DatingApp.DAL.Context;
+using DatingApp.DAL.Extensions;
+using DatingApp.DAL.Infrastructure;
 using DatingApp.DAL.Repository.Interfaces;
 using DatingApp.DAL.Specification.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -39,34 +36,64 @@ namespace DatingApp.DAL.Repository
         {
             return await _dbSet.FindAsync(id);
         }
+        
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification, bool applyTracking = true)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            
+            if (!applyTracking)
+                query = query.AsNoTracking();
+            
+            return await query.ApplySpecification(specification).ToListAsync();
+        }
+
+        public async Task<PagedList<TEntity>> GetPagedCollectionAsync(ISpecification<TEntity> specification,
+            int? pageNumber, int? pageSize = null, bool applyTracking = true)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            var totalCollectionCount = await query.ApplySpecification(specification).CountAsync();
+
+            var page = pageNumber ?? 1;
+            var size = pageSize ?? totalCollectionCount;
+
+            query = query.ApplySpecification(specification)
+                .Skip((page - 1) * size)
+                .Take(size);
+            
+            if (!applyTracking)
+                query = query.AsNoTracking();
+
+            var data = await query.ToListAsync();
+
+            return new PagedList<TEntity>(data, totalCollectionCount, page, size);
+        }
+
+        public async Task<TEntity?> GetFirstOrDefaultAsync(ISpecification<TEntity> specification, bool applyTracking = true)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            
+            if (!applyTracking)
+                query = query.AsNoTracking();
+            
+            return await query.ApplySpecification(specification).SingleOrDefaultAsync();
+        }
 
         public async Task Update(TEntity entity)
         {
             await Task.Run(() => _dbSet.Update(entity));
         }
-        public async Task<IEnumerable<TEntity>> Find(ISpecification<TEntity> specification)
+        
+        public async Task<bool> IsSatisfiedAsync(ISpecification<TEntity> specification)
         {
-            return await ApplySpecification(specification).ToListAsync();
+            IQueryable<TEntity> query = _dbSet;
+            return await query.ApplySpecification(specification).AnyAsync();
         }
-
-        public async Task<TEntity?> FindSingle(ISpecification<TEntity> specification)
-        {
-            return await ApplySpecification(specification).SingleOrDefaultAsync();
-        }
-
-        public async Task<bool> FindAny(ISpecification<TEntity> specification)
-        {
-            return await ApplySpecification(specification).AnyAsync();
-        }
-
-        private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
-        {
-            return SpecificationEvaluator<TEntity>.GetQuery(_dbSet.AsQueryable(), specification);
-        }
-
+        
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
+        
     }
 }

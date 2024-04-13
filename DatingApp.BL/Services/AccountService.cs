@@ -52,9 +52,9 @@ namespace DatingApp.BL.Services
 
         public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
-            var userSpecification = new GetUserWithPhotosByUsernameSpecification(loginDto.Username);
+            var userSpecification = new UserWithPhotoSpecification(loginDto.Username);
 
-            var user = await _repository.FindSingle(userSpecification);
+            var user = await _repository.GetFirstOrDefaultAsync(userSpecification);
 
             if (user == null) throw new HttpException(HttpStatusCode.Unauthorized, "Invalid username");
 
@@ -79,9 +79,9 @@ namespace DatingApp.BL.Services
 
         private async Task<bool> IsUserExist(string username)
         {
-            var userSpecification = new FindUserByUsernameSpecification(username);
+            var userSpecification = new UserByUsernameSpecification(username);
 
-            return await _repository.FindAny(userSpecification);
+            return await _repository.IsSatisfiedAsync(userSpecification);
         }
     }
 }

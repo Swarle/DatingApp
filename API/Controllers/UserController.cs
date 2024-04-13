@@ -1,5 +1,6 @@
 ﻿using DatingApp.BL.DTO;
 using DatingApp.BL.Extensions;
+using DatingApp.BL.Infrastructure;
 using DatingApp.BL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace API.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]PaginationFilter filter)
         {
-            var users = await _service.GetAllUsersAsync();
+            var users = await _service.GetAllUsersAsync(filter);
 
             return Ok(users);
         }

@@ -10,12 +10,9 @@ namespace DatingApp.DAL.Specification.Infrastructure
     public abstract class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity : class
     {
         public Expression<Func<TEntity, bool>>? Expression { get; }
-        public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; set; } =
-            new List<Expression<Func<TEntity, object>>>();
-        public List<string> IncludeString { get; set; } = new List<string>();
+        public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; set; } = [];
+        public List<string> IncludeString { get; set; } = [];
 
-        public PagingSpecification? Paging { get; set; }
-        public bool AsNoTracking { get; set; }
 
 
         protected BaseSpecification(Expression<Func<TEntity, bool>> expression)
@@ -37,14 +34,7 @@ namespace DatingApp.DAL.Specification.Infrastructure
         {
             IncludeString.Add(include);
         }
-
-
-        protected virtual void AddPagination(PagingSpecification paging)
-        {
-            Paging = paging;
-        }
-
-
+        
         public virtual bool IsSatisfied(TEntity obj)
         {
             bool result = Expression!.Compile().Invoke(obj);

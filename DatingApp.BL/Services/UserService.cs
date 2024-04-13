@@ -27,11 +27,19 @@ public class UserService : IUserService
         _httpContext = accessor.HttpContext ?? throw new InvalidOperationException("HttpContextAccessor does`t have context");
         _photoService = photoService;
     }
-    public async Task<IEnumerable<MemberDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<MemberDto>> GetAllUsersAsync(PaginationFilter filter)
     {
-        var specification = new GetUserWithPhotoSpecification();
         
-        var users = await _repository.Find(specification);
+        var specification = new UserWithPhotoSpecification();
+        
+        var users = await _repository.GetPagedCollectionAsync(specification,
+            filter.PageNumber, filter.PageSize);
+
+        if (!users.Any())
+            throw new HttpException(HttpStatusCode.NotFound);
+        
+        _httpContext.Response.AddPaginationHeader(users.CurrentPage,
+            users.PageSize, users.TotalCount, users.TotalPages);
 
         var usersDto = _mapper.Map<IEnumerable<MemberDto>>(users);
 
@@ -129,9 +137,9 @@ public class UserService : IUserService
         username ??= _httpContext.User.GetUsername() ??
                      throw new InvalidOperationException("Username claim is empty");
         
-        var specification = new GetUserWithPhotosByUsernameSpecification(username);
+        var specification = new UserWithPhotoSpecification(username);
 
-        var user = await _repository.FindSingle(specification);
+        var user = await _repository.GetFirstOrDefaultAsync(specification);
 
         if (user == null) 
             throw new HttpException(HttpStatusCode.NotFound, $"No user with Username: \"{username}\"");
