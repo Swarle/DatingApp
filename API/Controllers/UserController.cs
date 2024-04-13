@@ -19,9 +19,9 @@ namespace API.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]PaginationFilter filter)
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams param)
         {
-            var users = await _service.GetAllUsersAsync(filter);
+            var users = await _service.GetAllUsersAsync(param);
 
             return Ok(users);
         }

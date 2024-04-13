@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Security.Claims;
 using AutoMapper;
 using DatingApp.BL.DTO;
 using DatingApp.BL.Extensions;
@@ -27,13 +26,24 @@ public class UserService : IUserService
         _httpContext = accessor.HttpContext ?? throw new InvalidOperationException("HttpContextAccessor does`t have context");
         _photoService = photoService;
     }
-    public async Task<IEnumerable<MemberDto>> GetAllUsersAsync(PaginationFilter filter)
+    public async Task<IEnumerable<MemberDto>> GetAllUsersAsync(UserParams param)
     {
+        var currentUsername = _httpContext.User.GetUsername() ??
+                 throw new HttpException(HttpStatusCode.Unauthorized);
+
+        var userSpecification = new UserByUsernameSpecification(currentUsername);
+
+        var currentUser = await _repository.GetFirstOrDefaultAsync(userSpecification, false) ??
+                          throw new HttpException(HttpStatusCode.NotFound, $"No user with Username: {currentUsername} ");
+
+        if (string.IsNullOrEmpty(param.Gender))
+            param.Gender = currentUser.Gender == "male" ? "female" : "male";
         
-        var specification = new UserWithPhotoSpecification();
+        var specification = new UserWithPhotoAndFilteringSpecification(currentUsername,param.Gender,
+            param.MaxAge, param.MinAge, param.OrderBy!);
         
         var users = await _repository.GetPagedCollectionAsync(specification,
-            filter.PageNumber, filter.PageSize);
+            param.PageNumber, param.PageSize);
 
         if (!users.Any())
             throw new HttpException(HttpStatusCode.NotFound);

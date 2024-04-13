@@ -1,9 +1,4 @@
 ﻿using DatingApp.DAL.Specification.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DatingApp.DAL.Infrastructure;
 
 namespace DatingApp.DAL.Repository.Interfaces

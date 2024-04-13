@@ -6,7 +6,7 @@ namespace DatingApp.BL.Services.Interfaces;
 
 public interface IUserService
 {
-    public Task<IEnumerable<MemberDto>> GetAllUsersAsync(PaginationFilter filter);
+    public Task<IEnumerable<MemberDto>> GetAllUsersAsync(UserParams param);
     public Task<MemberDto> GetUserByUsernameAsync(string username);
     public Task UpdateUserAsync(MemberUpdateDto memberDto);
     public Task<PhotoDto> AddPhotoAsync(IFormFile file);

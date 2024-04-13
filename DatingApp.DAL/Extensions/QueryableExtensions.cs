@@ -27,8 +27,12 @@ public static class QueryableExtensions
                 .Aggregate(query,
                     (current, include) => current.Include(include));
         }
-            
 
+        if (specification.OrderBy != null)
+        {
+            query = query.OrderByDescending(specification.OrderBy);
+        }
+        
         return query;
     }
 }
