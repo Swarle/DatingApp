@@ -1,4 +1,5 @@
-﻿using DatingApp.BL.Infrastructure;
+﻿using DatingApp.BL.Helpers;
+using DatingApp.BL.Infrastructure;
 using DatingApp.BL.Services;
 using DatingApp.BL.Services.Interfaces;
 using DatingApp.DAL.Extensions;
@@ -14,6 +15,8 @@ namespace DatingApp.BL.Extensions
             IConfiguration configuration)
         {
             services.AddDataAccessLayer(configuration);
+
+            services.AddScoped<LogUserActivity>();
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             

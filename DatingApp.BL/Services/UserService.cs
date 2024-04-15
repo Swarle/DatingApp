@@ -8,6 +8,7 @@ using DatingApp.DAL.Entities;
 using DatingApp.DAL.Repository.Interfaces;
 using DatingApp.DAL.Specification.UserSpecification;
 using Microsoft.AspNetCore.Http;
+using Utility;
 
 namespace DatingApp.BL.Services;
 
@@ -29,7 +30,7 @@ public class UserService : IUserService
     public async Task<IEnumerable<MemberDto>> GetAllUsersAsync(UserParams param)
     {
         var currentUsername = _httpContext.User.GetUsername() ??
-                 throw new HttpException(HttpStatusCode.Unauthorized);
+                 throw new InvalidOperationException(SD.InvalidOperationMessage);
 
         var userSpecification = new UserByUsernameSpecification(currentUsername);
 
