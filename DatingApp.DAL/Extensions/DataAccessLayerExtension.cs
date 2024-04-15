@@ -22,6 +22,7 @@ namespace DatingApp.DAL.Extensions
                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IRepository<AppUser>, Repository<AppUser>>();
+            services.AddScoped<IRepository<UserLike>, Repository<UserLike>>();
 
             return services;
         }

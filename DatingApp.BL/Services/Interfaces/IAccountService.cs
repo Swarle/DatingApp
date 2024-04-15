@@ -1,4 +1,5 @@
 ﻿using DatingApp.BL.DTO;
+using DatingApp.BL.DTO.UserDTOs;
 
 namespace DatingApp.BL.Services.Interfaces
 {

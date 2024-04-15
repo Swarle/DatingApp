@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CloudinaryDotNet.Actions;
 using DatingApp.BL.DTO;
+using DatingApp.BL.DTO.LikeDTOs;
 using DatingApp.DAL.Entities;
 using DatingApp.DAL.Extensions;
 
@@ -30,6 +31,11 @@ namespace DatingApp.BL.Infrastructure
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => 
                     opt.MapFrom(src => src.Username.ToLower()));
+            CreateMap<AppUser, LikeDto>()
+                .ForMember(dest => dest.Age, opt =>
+                    opt.MapFrom(src => src.DateOfBirth.CalculateAge()))
+                .ForMember(dest => dest.PhotoUrl, opt =>
+                    opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain)!.Url));
 
         }
     }

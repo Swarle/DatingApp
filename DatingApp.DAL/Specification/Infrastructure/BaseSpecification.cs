@@ -21,33 +21,25 @@ namespace DatingApp.DAL.Specification.Infrastructure
         
         }
 
-        protected virtual BaseSpecification<TEntity> AddExpression(Expression<Func<TEntity, bool>> expression)
+        protected virtual void AddExpression(Expression<Func<TEntity, bool>> expression)
         {
             Expression = Expression == null ? expression 
                 : Expression.And(expression);
-
-            return this;
         }
 
-        protected virtual BaseSpecification<TEntity> AddOrderBy(Expression<Func<TEntity, object>> orderByExpression)
+        protected virtual void AddOrderBy(Expression<Func<TEntity, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
-
-            return this;
         }
 
-        protected virtual BaseSpecification<TEntity> AddInclude(Expression<Func<TEntity, object>> expression)
+        protected virtual void AddInclude(Expression<Func<TEntity, object>> expression)
         {
             IncludeExpressions.Add(expression);
-
-            return this;
         }
 
-        protected virtual BaseSpecification<TEntity> AddInclude(string include)
+        protected virtual void AddInclude(string include)
         {
             IncludeString.Add(include);
-
-            return this;
         }
         
         public virtual bool IsSatisfied(TEntity obj)

@@ -23,5 +23,8 @@ namespace DatingApp.DAL.Entities
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
         public List<Photo> Photos { get; set; } = [];
+        public List<UserLike> LikedByUsers { get; set; } = [];
+        public List<UserLike> LikedUsers { get; set; } = [];
+
     }
 }

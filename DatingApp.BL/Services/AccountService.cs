@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using DatingApp.BL.DTO;
+using DatingApp.BL.DTO.UserDTOs;
 using DatingApp.BL.Infrastructure;
 using DatingApp.BL.Services.Interfaces;
 using DatingApp.DAL.Entities;

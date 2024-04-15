@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
-namespace DatingApp.BL.DTO
+namespace DatingApp.BL.DTO.UserDTOs
 {
     public class LoginDto
     {

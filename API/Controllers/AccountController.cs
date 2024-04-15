@@ -1,4 +1,5 @@
 ﻿using DatingApp.BL.DTO;
+using DatingApp.BL.DTO.UserDTOs;
 using DatingApp.BL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
