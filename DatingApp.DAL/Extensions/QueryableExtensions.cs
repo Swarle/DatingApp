@@ -30,7 +30,8 @@ public static class QueryableExtensions
 
         if (specification.OrderBy != null)
         {
-            query = query.OrderByDescending(specification.OrderBy);
+            query = specification.IsDescendingOrderBy ? query.OrderByDescending(specification.OrderBy)
+                : query.OrderBy(specification.OrderBy);
         }
         
         return query;

@@ -27,6 +27,7 @@ namespace DatingApp.BL.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<IMessageService, MessageService>();
                 
             return services;
         }

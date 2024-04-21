@@ -23,6 +23,7 @@ namespace DatingApp.DAL.Extensions
 
             services.AddScoped<IRepository<AppUser>, Repository<AppUser>>();
             services.AddScoped<IRepository<UserLike>, Repository<UserLike>>();
+            services.AddScoped<IRepository<Message>, Repository<Message>>();
 
             return services;
         }

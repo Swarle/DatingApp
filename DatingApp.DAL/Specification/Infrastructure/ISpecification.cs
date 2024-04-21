@@ -8,6 +8,7 @@ namespace DatingApp.DAL.Specification.Infrastructure
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; }
         public List<string> IncludeString { get; }
         public Expression<Func<TEntity, object>>? OrderBy { get; }
+        public bool IsDescendingOrderBy { get; set; }
 
         bool IsSatisfied(TEntity obj);
     }
