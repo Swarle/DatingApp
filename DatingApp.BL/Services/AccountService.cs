@@ -9,6 +9,7 @@ using DatingApp.DAL.Repository.Interfaces;
 using DatingApp.DAL.Specification.UserSpecification;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Utility;
 
 namespace DatingApp.BL.Services
 {
@@ -42,10 +43,15 @@ namespace DatingApp.BL.Services
             if (!result.Succeeded)
                 throw new HttpException(HttpStatusCode.BadRequest, result.Errors.ToString());
 
+            var roleResult = await _userManager.AddToRoleAsync(user, RolesName.Member);
+
+            if (!roleResult.Succeeded)
+                throw new HttpException(HttpStatusCode.BadRequest, roleResult.Errors.ToString());
+
             return new UserDto
             {
                 Username = user.UserName!,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
                 Gender = user.Gender
             };
@@ -67,7 +73,7 @@ namespace DatingApp.BL.Services
             return new UserDto
             {
                 Username = user.UserName!,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
                 KnownAs = user.KnownAs,
                 Gender = user.Gender

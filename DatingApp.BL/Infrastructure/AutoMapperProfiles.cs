@@ -8,6 +8,7 @@ using CloudinaryDotNet.Actions;
 using DatingApp.BL.DTO;
 using DatingApp.BL.DTO.LikeDTOs;
 using DatingApp.BL.DTO.MessagesDTOs;
+using DatingApp.BL.DTO.UserDTOs;
 using DatingApp.DAL.Entities;
 using DatingApp.DAL.Extensions;
 
@@ -22,6 +23,10 @@ namespace DatingApp.BL.Infrastructure
                     opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url))
                 .ForMember(dest => dest.Age, opt =>
                     opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
+
+            CreateMap<AppUser, UserWithRolesDto>()
+                .ForMember(dest => dest.Roles, opt =>
+                    opt.MapFrom(src => src.UserRoles.Select(r => r.Role.Name).ToList()));
             
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, AppUser>();

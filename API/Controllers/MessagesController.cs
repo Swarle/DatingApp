@@ -1,11 +1,13 @@
 using DatingApp.BL.DTO.MessagesDTOs;
 using DatingApp.BL.Infrastructure;
 using DatingApp.BL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class MessagesController : BaseApiController
     {
         private readonly IMessageService _messageService;

@@ -19,6 +19,7 @@ namespace API.Controllers
         }
         
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams param)
         {
             var users = await _service.GetAllUsersAsync(param);
