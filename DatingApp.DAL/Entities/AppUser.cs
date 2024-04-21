@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace DatingApp.DAL.Entities
 {
-    public class AppUser
+    public class AppUser : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public required string UserName { get; set; }
-        public byte[] PasswordHash { get; set; } = null!;
-        public byte[] PasswordSalt { get; set; } = null!;
         public DateOnly DateOfBirth { get; set; }
         public string KnownAs { get; set; } = null!;
         public DateTime Created { get; set; } = DateTime.UtcNow;
@@ -27,6 +19,8 @@ namespace DatingApp.DAL.Entities
         public List<UserLike> LikedUsers { get; set; } = [];
         public List<Message> MessagesSent { get; set; } = [];
         public List<Message> MessagesReceived { get; set; } = [];
+
+        public ICollection<AppUserRole> UserRoles { get; set; } = null!;
 
     }
 }

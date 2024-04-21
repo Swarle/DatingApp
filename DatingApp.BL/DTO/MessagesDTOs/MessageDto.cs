@@ -1,4 +1,6 @@
-﻿namespace DatingApp.BL.DTO.MessagesDTOs;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace DatingApp.BL.DTO.MessagesDTOs;
 
 public class MessageDto
 {

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using DatingApp.BL.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Utility;
@@ -9,6 +10,8 @@ namespace API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddBusinessLogicLayerIdentityServices(configuration);
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
